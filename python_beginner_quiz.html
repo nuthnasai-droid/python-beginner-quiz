@@ -1,0 +1,253 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+#app { padding: 1rem 0; }
+.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 8px; }
+.header h2 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+.timer { font-size: 15px; font-weight: 500; color: var(--color-text-info); background: var(--color-background-info); padding: 6px 14px; border-radius: var(--border-radius-md); }
+.timer.warning { color: var(--color-text-danger); background: var(--color-background-danger); }
+.progress-bar { background: var(--color-background-secondary); border-radius: 999px; height: 6px; margin-bottom: 1.25rem; overflow: hidden; }
+.progress-fill { height: 100%; background: #1D9E75; border-radius: 999px; transition: width 0.3s; }
+.layout { display: grid; grid-template-columns: 220px minmax(0,1fr); gap: 1rem; }
+@media (max-width: 600px) { .layout { grid-template-columns: 1fr; } .palette { display: flex; flex-wrap: wrap; flex-direction: row !important; } }
+.palette { display: flex; flex-direction: column; gap: 6px; }
+.palette-btn { font-size: 13px; padding: 7px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); cursor: pointer; text-align: left; transition: background 0.15s; display: flex; align-items: center; gap: 8px; }
+.palette-btn:hover { background: var(--color-background-secondary); }
+.palette-btn.active { border-color: #1D9E75; color: #0F6E56; background: #E1F5EE; font-weight: 500; }
+.palette-btn.answered { background: #E1F5EE; border-color: #1D9E75; color: #0F6E56; }
+.palette-btn.answered.active { background: #9FE1CB; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-border-secondary); flex-shrink: 0; }
+.palette-btn.answered .dot { background: #1D9E75; }
+.q-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; }
+.q-meta { font-size: 12px; color: var(--color-text-tertiary); margin-bottom: 0.5rem; display: flex; gap: 8px; align-items: center; }
+.badge { font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); font-weight: 500; }
+.badge.easy { background: #E1F5EE; color: #0F6E56; }
+.badge.medium { background: #FAEEDA; color: #854F0B; }
+.badge.hard { background: #FAECE7; color: #993C1D; }
+.q-text { font-size: 15px; color: var(--color-text-primary); line-height: 1.6; margin-bottom: 1rem; }
+.context { font-size: 13px; color: var(--color-text-secondary); background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; margin-bottom: 1rem; border-left: 3px solid #1D9E75; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+.opt { padding: 10px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; font-size: 14px; text-align: left; transition: all 0.15s; }
+.opt:hover { background: var(--color-background-secondary); }
+.opt.selected { border-color: #1D9E75; background: #E1F5EE; color: #0F6E56; font-weight: 500; }
+.opt.correct { border-color: #3B6D11; background: #EAF3DE; color: #3B6D11; font-weight: 500; }
+.opt.wrong { border-color: #993C1D; background: #FAECE7; color: #993C1D; font-weight: 500; }
+.nav { display: flex; gap: 8px; margin-top: 1rem; justify-content: space-between; align-items: center; }
+.nav button { padding: 8px 18px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); cursor: pointer; font-size: 14px; }
+.nav button:hover { background: var(--color-background-secondary); }
+.submit-btn { padding: 8px 20px; border-radius: var(--border-radius-md); border: none; background: #1D9E75; color: white; font-size: 14px; font-weight: 500; cursor: pointer; }
+.submit-btn:hover { background: #0F6E56; }
+.results { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; }
+.score-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin: 1.25rem 0; }
+.stat { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; text-align: center; }
+.stat .val { font-size: 24px; font-weight: 500; color: var(--color-text-primary); }
+.stat .lbl { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+.ans-review { margin-top: 1.5rem; }
+.ans-item { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 1rem; margin-bottom: 10px; }
+.ans-item.correct-ans { border-color: #1D9E75; }
+.ans-item.wrong-ans { border-color: #D85A30; }
+.ans-item.skipped-ans { border-color: var(--color-border-secondary); }
+.ans-q { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+.ans-detail { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.explanation { font-size: 13px; color: var(--color-text-secondary); background: var(--color-background-secondary); padding: 8px 10px; border-radius: var(--border-radius-md); margin-top: 8px; line-height: 1.5; }
+.understood-row { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+.understood-row span { font-size: 12px; color: var(--color-text-secondary); }
+.thumb-btn { font-size: 18px; background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 6px; }
+.thumb-btn:hover { background: var(--color-background-secondary); }
+.thumb-btn.active-yes { background: #E1F5EE; }
+.thumb-btn.active-no { background: #FAECE7; }
+.confused-note { font-size: 12px; color: #993C1D; margin-top: 4px; }
+</style>
+
+<h2 class="sr-only">Python basics quiz — 20 multiple-choice questions, 25 minutes, +2 for correct, 0 for wrong or skipped</h2>
+
+<div id="app"></div>
+
+<script>
+const questions = [
+  { id:1, level:'easy', text:'What is Python?', context:'You want to automate sending emails every morning — which tool might you use?', opts:['A hardware programming language only for machines','A high-level, general-purpose programming language','A type of database','An operating system'], ans:1, explain:'Python is a beginner-friendly, high-level language used for web apps, automation, data science, and more. Guido van Rossum created it in 1991.' },
+  { id:2, level:'easy', text:'Which symbol is used for comments in Python?', context:'You want to leave a note in your code explaining what a line does.', opts:['//','/* */','#','--'], ans:2, explain:'The # symbol marks a single-line comment. Python ignores everything after # on that line. Comments help others (and future you) understand the code.' },
+  { id:3, level:'easy', text:'Which of these is the correct way to print "Hello World" in Python?', context:'You are writing your very first Python script.', opts:['echo("Hello World")','print("Hello World")','console.log("Hello World")','System.out.println("Hello World")'], ans:1, explain:'print() is Python\'s built-in function for displaying output. The text must be in quotes. Other options are from Bash, JavaScript, and Java.' },
+  { id:4, level:'easy', text:'What data type is the value 3.14?', context:'You are building a calculator app that needs to store the value of pi.', opts:['int','str','float','bool'], ans:2, explain:'float represents decimal (floating-point) numbers like 3.14. int is for whole numbers, str for text, and bool for True/False values.' },
+  { id:5, level:'easy', text:'How do you create a variable called age with a value of 20 in Python?', context:'A signup form needs to store a user\'s age.', opts:['int age = 20','var age = 20','age = 20','age := 20'], ans:2, explain:'Python uses simple assignment with =. No need to declare a type — Python figures it out automatically. This is called dynamic typing.' },
+  { id:6, level:'easy', text:'Which of these is a valid Python list?', context:'You want to store a shopping list of 3 items in one variable.', opts:['(1, 2, 3)','[1, 2, 3]','{1, 2, 3}','<1, 2, 3>'], ans:1, explain:'Square brackets [] define a list in Python. () creates a tuple, {} creates a set or dict, and <> is not valid Python syntax.' },
+  { id:7, level:'easy', text:'What does len() do?', context:'You want to know how many items are in your cart list.', opts:['Converts a value to a string','Returns the length of an object','Deletes elements','Sorts the list'], ans:1, explain:'len() returns the number of items in a sequence (list, string, tuple, etc.). For example, len([1,2,3]) returns 3.' },
+  { id:8, level:'medium', text:'What will this code print?\n\nx = 10\nif x > 5:\n    print("Big")\nelse:\n    print("Small")', context:'You are writing logic to classify a number.', opts:['Small','Big','Error','Nothing'], ans:1, explain:'x is 10, which is greater than 5, so the if-block runs and "Big" is printed. The else-block is skipped.' },
+  { id:9, level:'medium', text:'What is the output of:\n\nfor i in range(3):\n    print(i)', context:'A game loop runs a fixed number of times.', opts:['1 2 3','0 1 2 3','0 1 2','1 2'], ans:2, explain:'range(3) generates 0, 1, 2 — it starts at 0 and stops before 3. Each value is printed on a new line.' },
+  { id:10, level:'medium', text:'Which keyword is used to define a function in Python?', context:'You want to reuse a block of code that calculates tax.', opts:['function','define','def','func'], ans:2, explain:'def is the keyword to define a function in Python. Example: def calculate_tax(price): ... JavaScript uses function, Go uses func.' },
+  { id:11, level:'medium', text:'What does the following return?\n\ntype(42)', context:'You are debugging and need to check a variable\'s type.', opts:['"int"','int','<class \'int\'>','42'], ans:2, explain:'type() returns the type object. Python displays it as <class \'int\'>. To get just "int" as text, use type(42).__name__.' },
+  { id:12, level:'medium', text:'What is the correct way to import Python\'s math module?', context:'Your app needs to calculate square roots.', opts:['include math','import math','require math','using math'], ans:1, explain:'Python uses import to bring in modules. Once imported, you can use math.sqrt(), math.pi, etc. Other keywords are from C/Node.js/C#.' },
+  { id:13, level:'medium', text:'What will this return?\n\n"hello".upper()', context:'You are formatting a name to display in all caps.', opts:['"Hello"','hello','HELLO','Error'], ans:2, explain:'.upper() is a string method that converts all characters to uppercase. It returns a new string and does not modify the original.' },
+  { id:14, level:'medium', text:'What is a dictionary in Python?', context:'You want to store a student\'s name, age, and grade together.', opts:['An ordered list of values','A collection of key-value pairs','A type of loop','A file storage system'], ans:1, explain:'A dictionary stores data as key-value pairs: {"name": "Riya", "age": 18}. Keys are unique and used to look up values quickly.' },
+  { id:15, level:'medium', text:'Which operator checks if two values are equal in Python?', context:'A login system checks if the entered password matches the stored one.', opts:['=','===','==','is'], ans:2, explain:'== compares values for equality. A single = is for assignment, === is JavaScript, and is checks if two objects are the same in memory.' },
+  { id:16, level:'hard', text:'What is the output of:\n\ndef add(a, b=5):\n    return a + b\nprint(add(3))', context:'A function has a default shipping fee of ₹5.', opts:['Error','3','5','8'], ans:3, explain:'b has a default value of 5. When add(3) is called, a=3 and b=5, so 3+5=8 is returned and printed. Default parameters are very useful!' },
+  { id:17, level:'hard', text:'What does this list comprehension return?\n\n[x*2 for x in range(4)]', context:'You want to double every price in a list of 4 items.', opts:['[0,1,2,3]','[2,4,6,8]','[0,2,4,6]','[1,2,3,4]'], ans:2, explain:'range(4) gives 0,1,2,3. Each is multiplied by 2, giving [0,2,4,6]. List comprehensions are a concise way to build lists.' },
+  { id:18, level:'hard', text:'What will happen when this code runs?\n\nmy_list = [1, 2, 3]\nprint(my_list[5])', context:'You try to access the 6th item in a 3-item list.', opts:['None','0','IndexError','undefined'], ans:2, explain:'Python raises an IndexError when you access an index that doesn\'t exist. Lists are 0-indexed, so valid indices here are 0, 1, 2 only.' },
+  { id:19, level:'hard', text:'What does the "self" parameter represent in a Python class method?', context:'You are building a BankAccount class with a deposit method.', opts:['The parent class','The current instance of the class','A built-in Python keyword','A global variable'], ans:1, explain:'self refers to the specific object calling the method. In account1.deposit(100), self is account1. It lets each instance have its own data.' },
+  { id:20, level:'hard', text:'What is the difference between a list and a tuple in Python?', context:'You store GPS coordinates that should never change.', opts:['Lists use () and tuples use []','Tuples are faster; lists allow duplicates but tuples do not','Lists are mutable (changeable); tuples are immutable (fixed)','There is no difference'], ans:2, explain:'Lists can be changed after creation (mutable). Tuples cannot (immutable). Use tuples for fixed data like coordinates, config values, or RGB colors.' }
+];
+
+let current = 0;
+let answers = new Array(20).fill(null);
+let submitted = false;
+let understood = {};
+let timeLeft = 25 * 60;
+let timerEl, interval;
+
+function fmt(s) {
+  const m = Math.floor(s/60), sec = s%60;
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+
+function render() {
+  const app = document.getElementById('app');
+  if (submitted) { renderResults(app); return; }
+
+  const q = questions[current];
+  const answered = answers.filter(a => a !== null).length;
+
+  app.innerHTML = `
+    <div class="header">
+      <h2>Python Basics Quiz</h2>
+      <div class="timer" id="timer-el">${fmt(timeLeft)}</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${(answered/20)*100}%"></div></div>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem;">${answered}/20 answered · +2 correct · 0 wrong/skipped</p>
+    <div class="layout">
+      <div class="palette">
+        ${questions.map((qq,i) => `
+          <button class="palette-btn ${answers[i]!==null?'answered':''} ${i===current?'active':''}" onclick="goTo(${i})">
+            <span class="dot"></span>
+            <span>Q${i+1} <span class="badge ${qq.level}">${qq.level}</span></span>
+          </button>
+        `).join('')}
+      </div>
+      <div>
+        <div class="q-card">
+          <div class="q-meta">
+            <span>Question ${current+1} of 20</span>
+            <span class="badge ${q.level}">${q.level}</span>
+            <span style="margin-left:auto;color:var(--color-text-secondary);">+2 marks</span>
+          </div>
+          <div class="q-text">${q.text.replace(/\n/g,'<br>')}</div>
+          <div class="context"><i class="ti ti-bulb" aria-hidden="true" style="font-size:14px;margin-right:6px;"></i>${q.context}</div>
+          <div class="options">
+            ${q.opts.map((o,i) => `
+              <button class="opt ${answers[current]===i?'selected':''}" onclick="select(${i})">${String.fromCharCode(65+i)}. ${o}</button>
+            `).join('')}
+          </div>
+          <div class="nav">
+            <button onclick="goTo(${current-1})" ${current===0?'disabled':''}>← Prev</button>
+            <span style="font-size:13px;color:var(--color-text-tertiary);">${answered} answered</span>
+            ${current===19
+              ? `<button class="submit-btn" onclick="confirmSubmit()">Submit Quiz</button>`
+              : `<button onclick="goTo(${current+1})">Next →</button>`
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  timerEl = document.getElementById('timer-el');
+  if (!interval) {
+    interval = setInterval(() => {
+      timeLeft--;
+      if (timeLeft <= 0) { clearInterval(interval); submitted = true; render(); return; }
+      if (timerEl) {
+        timerEl.textContent = fmt(timeLeft);
+        if (timeLeft <= 120) timerEl.className = 'timer warning';
+      }
+    }, 1000);
+  }
+}
+
+function select(i) {
+  if (submitted) return;
+  answers[current] = i;
+  render();
+}
+
+function goTo(i) {
+  if (i < 0 || i > 19) return;
+  current = i;
+  render();
+}
+
+function confirmSubmit() {
+  const unanswered = answers.filter(a => a === null).length;
+  if (unanswered > 0) {
+    if (!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)) return;
+  }
+  clearInterval(interval);
+  submitted = true;
+  render();
+}
+
+function renderResults(app) {
+  let correct = 0, wrong = 0, skipped = 0;
+  answers.forEach((a, i) => {
+    if (a === null) skipped++;
+    else if (a === questions[i].ans) correct++;
+    else wrong++;
+  });
+  const score = correct * 2;
+  const pct = Math.round((correct/20)*100);
+
+  app.innerHTML = `
+    <div class="results">
+      <h2 style="font-size:18px;font-weight:500;margin-bottom:4px;">Quiz Complete!</h2>
+      <p style="font-size:14px;color:var(--color-text-secondary);">Here's how you did:</p>
+      <div class="score-row">
+        <div class="stat"><div class="val" style="color:#1D9E75;">${score}/40</div><div class="lbl">Total Score</div></div>
+        <div class="stat"><div class="val" style="color:#3B6D11;">${correct}</div><div class="lbl">Correct</div></div>
+        <div class="stat"><div class="val" style="color:#D85A30;">${wrong}</div><div class="lbl">Wrong</div></div>
+        <div class="stat"><div class="val" style="color:var(--color-text-secondary);">${skipped}</div><div class="lbl">Skipped</div></div>
+        <div class="stat"><div class="val">${pct}%</div><div class="lbl">Accuracy</div></div>
+      </div>
+      <div class="ans-review">
+        <h3 style="font-size:15px;font-weight:500;margin-bottom:12px;">Answer Review</h3>
+        ${questions.map((q, i) => {
+          const ua = answers[i];
+          const isCorrect = ua === q.ans;
+          const isSkipped = ua === null;
+          const cls = isCorrect ? 'correct-ans' : isSkipped ? 'skipped-ans' : 'wrong-ans';
+          const status = isCorrect ? '✓ Correct (+2)' : isSkipped ? '— Skipped (0)' : '✗ Wrong (0)';
+          const statusColor = isCorrect ? '#0F6E56' : isSkipped ? 'var(--color-text-secondary)' : '#993C1D';
+          return `
+            <div class="ans-item ${cls}">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;">
+                <div class="ans-q">Q${i+1}. ${q.text.replace(/\n/g,' ')}</div>
+                <span style="font-size:12px;font-weight:500;color:${statusColor};white-space:nowrap;">${status}</span>
+              </div>
+              ${!isSkipped ? `<div class="ans-detail">Your answer: <strong>${q.opts[ua]}</strong></div>` : ''}
+              <div class="ans-detail" style="color:#0F6E56;">Correct answer: <strong>${q.opts[q.ans]}</strong></div>
+              <div class="explanation"><i class="ti ti-info-circle" aria-hidden="true" style="font-size:13px;margin-right:4px;"></i>${q.explain}</div>
+              <div class="understood-row">
+                <span>Did you understand this?</span>
+                <button class="thumb-btn ${understood[i]==='yes'?'active-yes':''}" onclick="markUnderstood(${i},'yes')" title="Yes, I understood">👍</button>
+                <button class="thumb-btn ${understood[i]==='no'?'active-no':''}" onclick="markUnderstood(${i},'no')" title="No, explain more">👎</button>
+                ${understood[i]==='no' ? `<span class="confused-note" id="confused-${i}">Don't worry! Click below to get a deeper explanation.</span>` : ''}
+              </div>
+              ${understood[i]==='no' ? `<button onclick="askMore(${i})" style="margin-top:6px;font-size:12px;padding:5px 12px;border-radius:var(--border-radius-md);border:0.5px solid #D85A30;background:#FAECE7;color:#993C1D;cursor:pointer;">Explain Q${i+1} in more detail ↗</button>` : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function markUnderstood(i, val) {
+  understood[i] = val;
+  renderResults(document.getElementById('app'));
+}
+
+function askMore(i) {
+  const q = questions[i];
+  sendPrompt(`Can you explain Q${i+1} from the Python quiz in more detail? The question was: "${q.text}" — correct answer is "${q.opts[q.ans]}". Current explanation: "${q.explain}"`);
+}
+
+render();
+</script>
