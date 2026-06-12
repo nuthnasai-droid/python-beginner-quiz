@@ -1,0 +1,270 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans,system-ui,sans-serif)}
+.lt{--bg:#fff;--surf:#f6f6f6;--panel:#f0f0f0;--bdr:#e0e0e0;--txt:#111;--txt2:#555;--head:#000;--optbg:#fff;--selb:#e8f0fe;--selc:#1a3ac7;--sele:#4f6ef7;--pbtn:#111;--pbtntxt:#fff;--ansbg:#22c55e;--anstxt:#fff;--tmr:#111}
+.dk{--bg:#0f0f0f;--surf:#1a1a1a;--panel:#141414;--bdr:#2a2a2a;--txt:#00dd77;--txt2:#00aa55;--head:#00ff88;--optbg:#111;--selb:#0a2e1a;--selc:#00ff88;--sele:#00cc66;--pbtn:#00cc66;--pbtntxt:#000;--ansbg:#00cc66;--anstxt:#000;--tmr:#00dd77}
+#root{position:relative;border-radius:14px;overflow:hidden;background:var(--bg);color:var(--txt);min-height:600px;transition:background .25s,color .25s}
+
+.ov{position:absolute;inset:0;background:rgba(0,0,0,.52);display:flex;align-items:center;justify-content:center;z-index:60;border-radius:14px}
+.pop{background:#fff;color:#111;border-radius:16px;padding:2.25rem 2.5rem;text-align:center;width:320px;border:0.5px solid #e0e0e0}
+.pop-icon{font-size:36px;margin-bottom:.75rem;line-height:1}
+.pop h3{font-size:18px;font-weight:500;margin-bottom:.4rem}
+.pop p{font-size:13px;color:#666;margin-bottom:1.5rem;line-height:1.65}
+.pop-btns{display:flex;gap:12px;justify-content:center}
+.pb{padding:11px 0;border-radius:10px;border:1.5px solid #ddd;cursor:pointer;font-size:14px;font-weight:500;transition:all .15s;width:120px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.pb:hover{transform:scale(0.97)}
+.pb-lt{background:#fff;color:#111;border-color:#ccc}
+.pb-dk{background:#111;color:#00cc66;border-color:#333}
+.pb-em{font-size:22px;line-height:1}
+.pb-lbl{font-size:12px}
+
+.ready{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:590px;gap:1.1rem;text-align:center;padding:2rem}
+.ready h1{font-size:30px;font-weight:500;color:var(--head)}
+.tagline{font-size:19px;font-weight:500;color:var(--txt2)}
+.info-box{background:var(--surf);border:0.5px solid var(--bdr);border-radius:12px;padding:1rem 1.5rem;text-align:left;line-height:2.1;font-size:13.5px;color:var(--txt2)}
+.info-box span{display:block}
+.sbtn{padding:13px 48px;background:var(--pbtn);color:var(--pbtntxt);border:none;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;transition:opacity .2s;margin-top:.4rem}
+.sbtn:hover{opacity:.82}
+
+.qwrap{display:flex;min-height:590px}
+.navp{width:150px;min-width:130px;background:var(--panel);border-right:0.5px solid var(--bdr);padding:1rem .75rem;display:flex;flex-direction:column;gap:.5rem;flex-shrink:0}
+.nav-ttl{font-size:11px;font-weight:500;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;text-align:center;margin-bottom:.25rem}
+.ngrid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.nq{width:100%;aspect-ratio:1;border:1.5px solid var(--bdr);border-radius:5px;font-size:11px;font-weight:500;cursor:pointer;background:var(--optbg);color:var(--txt);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.nq.a{background:var(--ansbg);border-color:var(--ansbg);color:var(--anstxt)}
+.nq.c{outline:2px solid #4f6ef7;outline-offset:1px}
+.dk .nq.c{outline-color:#00cc66}
+.nav-ft{margin-top:auto;font-size:11px;color:var(--txt2);text-align:center;padding-top:.5rem}
+
+.qa{flex:1;padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:.85rem;overflow-y:auto}
+.qtop{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.qh{font-size:18px;font-weight:500;color:var(--head)}
+.tmr{font-size:14px;font-weight:500;padding:5px 14px;border-radius:7px;border:1.5px solid var(--bdr);color:var(--tmr);background:var(--optbg)}
+.tmr.w{border-color:#f59e0b;color:#f59e0b}
+.tmr.d{border-color:#ef4444;color:#ef4444}
+.sc-info{font-size:11.5px;color:var(--txt2)}
+.qmeta{font-size:12px;color:var(--txt2)}
+.dbadge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:500;margin-left:5px}
+.de{background:#dcfce7;color:#166534}.dm{background:#fef3c7;color:#92400e}.dh{background:#fee2e2;color:#991b1b}
+.dk .de{background:#052e16;color:#4ade80}.dk .dm{background:#1c1500;color:#fbbf24}.dk .dh{background:#2d0000;color:#f87171}
+.qtxt{font-size:15.5px;font-weight:500;color:var(--txt);line-height:1.65}
+.qex{font-size:12.5px;color:var(--txt2);background:var(--surf);border-left:3px solid #4f6ef7;padding:7px 12px;border-radius:0 7px 7px 0;font-style:italic}
+.dk .qex{border-left-color:#00cc66}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{text-align:left;padding:11px 15px;border:1.5px solid var(--bdr);border-radius:9px;background:var(--optbg);color:var(--txt);font-size:13.5px;cursor:pointer;transition:all .15s;line-height:1.5}
+.opt:hover{border-color:var(--sele)}
+.opt.s{border-color:var(--sele);background:var(--selb);color:var(--selc)}
+.qfoot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.nbtn{padding:9px 20px;border-radius:8px;border:1.5px solid var(--bdr);background:var(--optbg);color:var(--txt);font-size:13px;cursor:pointer;transition:all .15s}
+.nbtn:hover:not(:disabled){border-color:var(--sele);color:var(--sele)}
+.nbtn:disabled{opacity:.3;cursor:not-allowed}
+.subbtn{padding:9px 22px;border-radius:8px;border:none;background:#ef4444;color:#fff;font-size:13px;font-weight:500;cursor:pointer;transition:opacity .2s}
+.subbtn:hover{opacity:.83}
+
+.res{padding:1.5rem;display:flex;flex-direction:column;gap:1.1rem}
+.res h2{font-size:22px;font-weight:500;color:var(--head);text-align:center}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.sc{background:var(--surf);border-radius:9px;padding:10px;text-align:center;border:0.5px solid var(--bdr)}
+.sclbl{font-size:11px;color:var(--txt2);margin-bottom:4px}
+.scv{font-size:22px;font-weight:500}
+.scv.bl{color:#4f6ef7}.scv.gr{color:#22c55e}.scv.re{color:#ef4444}.scv.am{color:#f59e0b}
+.verd{text-align:center;font-size:13.5px;color:var(--txt2)}
+.asec h3{font-size:15px;font-weight:500;color:var(--head);margin-bottom:.6rem}
+.acard{border:0.5px solid var(--bdr);border-radius:11px;padding:13px 15px;background:var(--surf);margin-bottom:11px}
+.aq{font-size:13.5px;font-weight:500;color:var(--txt);margin-bottom:7px}
+.ameta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:7px;align-items:center}
+.tag{padding:2px 10px;border-radius:11px;font-size:11px;font-weight:500}
+.tc{background:#dcfce7;color:#166534}.tw{background:#fee2e2;color:#991b1b}.ts{background:#fef3c7;color:#92400e}
+.dk .tc{background:#052e16;color:#4ade80}.dk .tw{background:#2d0000;color:#f87171}.dk .ts{background:#1c1500;color:#fbbf24}
+.atxt{font-size:12px;color:var(--txt2)}
+.exp{font-size:12.5px;color:var(--txt2);background:var(--bg);border-left:3px solid #4f6ef7;padding:7px 11px;border-radius:0 6px 6px 0;line-height:1.6;margin-top:6px}
+.dk .exp{border-left-color:#00cc66}
+.urow{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.ulbl{font-size:12px;color:var(--txt2)}
+.ubtn{padding:4px 14px;border-radius:6px;border:1.5px solid var(--bdr);background:var(--optbg);color:var(--txt2);font-size:12px;cursor:pointer;transition:all .15s}
+.ubtn.yo{border-color:#22c55e;color:#166534;background:#dcfce7}.dk .ubtn.yo{color:#4ade80;background:#052e16}
+.ubtn.no{border-color:#ef4444;color:#991b1b;background:#fee2e2}.dk .ubtn.no{color:#f87171;background:#2d0000}
+.uhint{font-size:12px;color:#4f6ef7;margin-top:5px;line-height:1.5}.dk .uhint{color:#00cc66}
+</style>
+
+<div id="root" class="lt">
+  <div id="pop" class="ov">
+    <div class="pop">
+      <div class="pop-icon">🎨</div>
+      <h3>Choose your theme</h3>
+      <p>Pick the interface style you are most comfortable with before we begin.</p>
+      <div class="pop-btns">
+        <button class="pb pb-lt" onclick="pickTheme('lt')">
+          <span class="pb-em">☀️</span>
+          <span class="pb-lbl">Light</span>
+        </button>
+        <button class="pb pb-dk" onclick="pickTheme('dk')">
+          <span class="pb-em">🌙</span>
+          <span class="pb-lbl">Dark</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="app"></div>
+</div>
+
+<script>
+const Q=[
+  {q:"What is Python?",ex:"Like a universal remote — one tool that controls many things.",opts:["A type of snake","A programming language","A web browser","A database"],ans:1,d:"Easy",exp:"Python is a beginner-friendly programming language used for web apps, AI, automation and data science."},
+  {q:"Which function displays output on screen in Python?",ex:"print('Hello') → Hello appears on your screen.",opts:["show()","echo()","print()","display()"],ans:2,d:"Easy",exp:"print() is Python's built-in function to send text or values to the console — your main way to see results."},
+  {q:"How do you store the number 25 in a variable called 'age'?",ex:"Like labelling a jar: age = 25",opts:["var age = 25","int age = 25","age = 25","age := 25"],ans:2,d:"Easy",exp:"Python uses simple assignment: name = value. No type keyword needed — Python figures the type out automatically."},
+  {q:"Which symbol starts a comment in Python?",ex:"# This line is ignored by Python — useful for notes.",opts:["//","/*","#","--"],ans:2,d:"Easy",exp:"# marks a single-line comment. Python ignores everything after # on that line. Great for explaining your code."},
+  {q:"What data type is the value 3.14?",ex:"Like a price tag — 3.14 is not a whole number.",opts:["int","str","bool","float"],ans:3,d:"Easy",exp:"float stores decimal numbers. int is for whole numbers, str for text, bool for True/False values."},
+  {q:"What does len('Python') return?",ex:"Counting each letter: P-y-t-h-o-n",opts:["5","6","7","Error"],ans:1,d:"Easy",exp:"len() counts characters in a string. 'Python' has exactly 6 characters, so len('Python') returns 6."},
+  {q:"Which keyword starts an if-statement?",ex:"IF it rains today, take an umbrella.",opts:["when","check","condition","if"],ans:3,d:"Easy",exp:"if is Python's conditional keyword. The indented block below it runs only when the condition is True."},
+  {q:"What is the result of 2 ** 4 in Python?",ex:"2 ** 4 means 2 raised to the power 4 (2×2×2×2).",opts:["6","8","16","12"],ans:2,d:"Medium",exp:"** is Python's exponentiation operator. 2**4 = 2×2×2×2 = 16. Not the same as multiplication!"},
+  {q:"What does a for loop do?",ex:"Like reading names off a class register one by one.",opts:["Runs code once","Repeats forever","Iterates over a sequence","Defines a function"],ans:2,d:"Medium",exp:"A for loop goes through each item in a sequence (list, string, range) and runs the block for each one."},
+  {q:"Which function converts the string '10' to an integer?",ex:"User types '10' — you need to calculate with it.",opts:["str()","float()","int()","num()"],ans:2,d:"Medium",exp:"int() converts compatible strings or floats to integers. Essential for processing user input in programs."},
+  {q:"What does 'not in' check?",ex:"'cat' not in ['dog','fish'] → True",opts:["If item exists","If item is absent from a collection","If two values are equal","If a list is empty"],ans:1,d:"Medium",exp:"'not in' returns True when a value is NOT found in a sequence or collection. It's the opposite of 'in'."},
+  {q:"What is a Python list?",ex:"Like a shopping cart holding multiple items in order.",opts:["A single value","An ordered, changeable collection","A key-value store","A block of code"],ans:1,d:"Medium",exp:"Lists store ordered, mutable collections created with []. Example: fruits = ['apple','mango','grape']"},
+  {q:"What does range(1, 6) produce?",ex:"Like page numbers 1 through 5 in a book.",opts:["1 2 3 4 5 6","1 2 3 4 5","0 1 2 3 4 5","2 3 4 5 6"],ans:1,d:"Medium",exp:"range(start, stop) generates numbers from start up to — but not including — stop. range(1,6) gives 1,2,3,4,5."},
+  {q:"How do you define a function in Python?",ex:"Like writing a recipe: define it once, use it anytime.",opts:["function greet():","func greet():","def greet():","define greet():"],ans:2,d:"Medium",exp:"def is Python's keyword for defining functions. After def name(): write the indented block of code to run."},
+  {q:"What does a Python dictionary store?",ex:"Like a phone book — name maps to phone number.",opts:["Only numbers","Only strings","Key-value pairs","Ordered lists"],ans:2,d:"Medium",exp:"Dictionaries store key:value pairs. Example: {'name':'Alex','age':20}. Keys must be unique and immutable."},
+  {q:"What is the purpose of try-except?",ex:"Like a safety net — catches errors before they crash your app.",opts:["Defines a loop","Imports a module","Creates a class","Handles runtime errors gracefully"],ans:3,d:"Hard",exp:"try-except catches exceptions so the program doesn't crash. Code in try runs first; errors go to except block."},
+  {q:"What does *args allow in a function?",ex:"def total(*args) — pass as many numbers as you like.",opts:["Exactly one argument","Any number of keyword arguments","Any number of positional arguments","Only integer arguments"],ans:2,d:"Hard",exp:"*args collects any number of positional arguments into a tuple. Useful when you don't know how many values to expect."},
+  {q:"What is list comprehension?",ex:"[x*2 for x in range(5)] → [0, 2, 4, 6, 8]",opts:["A way to delete lists","A concise one-line way to build lists","A method to sort lists","A way to merge two lists"],ans:1,d:"Hard",exp:"List comprehension creates a new list from an expression in one line — cleaner and faster than a full for loop."},
+  {q:"What does a lambda function do?",ex:"double = lambda x: x*2 — a mini function on one line.",opts:["Creates a class","Loops over a list","Creates an anonymous single-expression function","Imports a module"],ans:2,d:"Hard",exp:"lambda makes small anonymous functions inline. Handy as arguments to sorted(), map(), or filter()."},
+  {q:"What is the difference between == and is in Python?",ex:"a == b checks if values match; a is b checks if it's the exact same object.",opts:["No difference at all","== checks identity; is checks value","== checks value; is checks object identity","is only works with numbers"],ans:2,d:"Hard",exp:"== compares values (5 == 5.0 is True). is checks if two names point to the identical object in memory."}
+];
+
+let theme='lt',cur=0,ans=new Array(20).fill(null),secs=1500,iv=null,done=false,und={};
+
+function pickTheme(t){
+  theme=t;
+  document.getElementById('root').className=t;
+  document.getElementById('pop').style.display='none';
+  renderReady();
+}
+
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function tcls(){return secs<=120?'tmr d':secs<=300?'tmr w':'tmr'}
+
+function renderReady(){
+  document.getElementById('app').innerHTML=`
+<div class="ready">
+  <div style="font-size:13px;color:var(--txt2);font-weight:500;letter-spacing:.05em;text-transform:uppercase">🐍 Python Quiz</div>
+  <h1>Python Quiz</h1>
+  <div class="tagline">✨ You've Got This.</div>
+  <div class="info-box">
+    <span>📋 20 questions &nbsp;·&nbsp; ⏱️ 25 minutes</span>
+    <span>✅ +2 correct &nbsp;·&nbsp; ❌ 0 wrong or skipped</span>
+    <span>📈 Easy → Medium → Hard</span>
+    <span>🏆 Max score: 40 points</span>
+  </div>
+  <button class="sbtn" onclick="begin()">🚀 I'm ready — Start Quiz</button>
+</div>`;
+}
+
+function begin(){
+  secs=1500;
+  iv=setInterval(()=>{secs--;var t=document.getElementById('td');if(t){t.className=tcls();t.textContent=fmt(secs);}if(secs<=0){clearInterval(iv);submitQ();}},1000);
+  renderQuiz();
+}
+
+function renderQuiz(){
+  if(done)return;
+  var q=Q[cur];
+  var nb=Q.map((_,i)=>{var c='nq'+(ans[i]!==null?' a':'')+(i===cur?' c':'');return`<button class="${c}" onclick="go(${i})">${i+1}</button>`;}).join('');
+  var ob=q.opts.map((o,i)=>`<button class="opt${ans[cur]===i?' s':''}" onclick="pick(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('');
+  var dc=q.d==='Easy'?'de':q.d==='Medium'?'dm':'dh';
+  var dc_emoji=q.d==='Easy'?'🟢':q.d==='Medium'?'🟡':'🔴';
+  var done_c=ans.filter(a=>a!==null).length;
+  document.getElementById('app').innerHTML=`
+<div class="qwrap">
+  <div class="navp">
+    <div class="nav-ttl">Questions</div>
+    <div class="ngrid">${nb}</div>
+    <div class="nav-ft">✅ ${done_c}/20 done</div>
+  </div>
+  <div class="qa">
+    <div class="qtop">
+      <span class="qh">🐍 Python Quiz</span>
+      <span id="td" class="${tcls()}">⏱️ ${fmt(secs)}</span>
+    </div>
+    <div class="sc-info">+2 correct &nbsp;·&nbsp; 0 wrong / skipped &nbsp;·&nbsp; Max 40 pts</div>
+    <div class="qmeta">Question ${cur+1} of 20 <span class="dbadge ${dc}">${dc_emoji} ${q.d}</span></div>
+    <div class="qtxt">${q.q}</div>
+    <div class="qex">💡 ${q.ex}</div>
+    <div class="opts">${ob}</div>
+    <div class="qfoot">
+      <button class="nbtn" onclick="prev()" ${cur===0?'disabled':''}>← Prev</button>
+      <button class="subbtn" onclick="confirmSub()">📤 Submit Test</button>
+      <button class="nbtn" onclick="nxt()" ${cur===19?'disabled':''}>Next →</button>
+    </div>
+  </div>
+</div>`;
+}
+
+function go(i){cur=i;renderQuiz();}
+function nxt(){if(cur<19){cur++;renderQuiz();}}
+function prev(){if(cur>0){cur--;renderQuiz();}}
+function pick(i){ans[cur]=i;renderQuiz();}
+
+function confirmSub(){
+  var left=ans.filter(a=>a===null).length;
+  if(left>0){if(!confirm('⚠️ '+left+' question(s) unanswered. Submit anyway?'))return;}
+  submitQ();
+}
+
+function submitQ(){clearInterval(iv);done=true;renderResults();}
+
+function renderResults(){
+  var correct=0,wrong=0,skip=0;
+  ans.forEach((a,i)=>{if(a===null)skip++;else if(a===Q[i].ans)correct++;else wrong++;});
+  var score=correct*2;
+  var verdict=score>=32?'🏆 Excellent — you are Python-ready!':score>=20?'👏 Good work — keep practising!':'💪 Keep going — every expert started exactly here!';
+
+  var cards=Q.map((q,i)=>{
+    var a=ans[i];
+    var st=a===null?'s':a===q.ans?'c':'w';
+    var tlbl=st==='c'?['tc','✅ Correct']:st==='w'?['tw','❌ Wrong']:['ts','⏭️ Skipped'];
+    var your=a!==null?String.fromCharCode(65+a)+'. '+q.opts[a]:'Not attempted';
+    var corr=String.fromCharCode(65+q.ans)+'. '+q.opts[q.ans];
+    return`<div class="acard">
+<div class="aq">Q${i+1}. ${q.q}</div>
+<div class="ameta">
+  <span class="tag ${tlbl[0]}">${tlbl[1]}</span>
+  <span class="atxt">Your answer: <strong>${your}</strong></span>
+  ${st!=='c'?`<span class="atxt" style="color:#166534">✅ Correct: <strong>${corr}</strong></span>`:''}
+</div>
+<div class="exp">📖 ${q.exp}</div>
+<div class="urow">
+  <span class="ulbl">💬 Understood?</span>
+  <button class="ubtn" id="uy${i}" onclick="mu(${i},'y')">👍 Yes, got it!</button>
+  <button class="ubtn" id="un${i}" onclick="mu(${i},'n')">🤔 Not yet</button>
+</div>
+<div id="uh${i}" style="display:none" class="uhint"></div>
+</div>`;
+  }).join('');
+
+  document.getElementById('app').innerHTML=`
+<div class="res">
+  <h2>🎉 Quiz Complete!</h2>
+  <div class="sgrid">
+    <div class="sc"><div class="sclbl">Score</div><div class="scv bl">${score}/40</div></div>
+    <div class="sc"><div class="sclbl">✅ Correct</div><div class="scv gr">${correct}</div></div>
+    <div class="sc"><div class="sclbl">❌ Wrong</div><div class="scv re">${wrong}</div></div>
+    <div class="sc"><div class="sclbl">⏭️ Skipped</div><div class="scv am">${skip}</div></div>
+  </div>
+  <div class="verd">${verdict}</div>
+  <div class="asec"><h3>📝 Answer Review</h3>${cards}</div>
+</div>`;
+}
+
+function mu(i,v){
+  und[i]=v;
+  var yb=document.getElementById('uy'+i),nb=document.getElementById('un'+i),hb=document.getElementById('uh'+i);
+  yb.className='ubtn'+(v==='y'?' yo':'');
+  nb.className='ubtn'+(v==='n'?' no':'');
+  if(v==='n'){hb.style.display='block';hb.textContent='💡 Tip: Re-read the explanation above. Then search "Python '+Q[i].q.split(' ').slice(0,4).join(' ')+'" on W3Schools for hands-on examples!';}
+  else{hb.style.display='none';}
+}
+
+renderReady();
+</script>
